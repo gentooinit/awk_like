@@ -18,7 +18,44 @@ class awk_like {
 		std::string ORS;                                  //Output Row Separator
 		std::string OFS;                                  //Output Field Separator
 			
-		afield field;
+		class map {
+			public:
+				class Proxy {
+					public:
+						Proxy(map &m, int k): pm(m), key(k) {}
+
+						operator afield::mapped_type() const {
+							return pm._field[key];
+						}
+
+						Proxy &operator=(const Proxy &rhs) {
+							pm._field[key] = rhs.pm._field[rhs.key];
+							return *this;
+						}
+
+						Proxy &operator=(afield::mapped_type str) {
+							pm._field[key] = str;
+							return *this;
+						}
+					private:
+						map &pm;
+						int key;
+				};
+
+				Proxy operator[](int key) {
+					return Proxy(*this, key);
+				}
+
+				const Proxy operator[](int key) const {
+					return Proxy(const_cast<map &>(*this), key);
+				}
+
+				void clear() { _field.clear(); }
+
+				friend class Proxy;
+			private:
+				afield _field;
+		} field;
 		
 		std::string all() {
 			int i;
@@ -53,7 +90,8 @@ class awk_like {
 			return strtol(str.c_str(), 0, 0);
 		}
 		
-		size_t split(std::string str, afield &list, const std::string &sep) {
+		template <typename list_t>
+		size_t split(std::string str, list_t &list, const std::string &sep) {
 			size_t counter;
 			std::smatch m;
 			std::regex e(sep);
@@ -76,7 +114,8 @@ class awk_like {
 			return counter;
 		}
 		
-		int split(const std::string &str, afield &list) { return split(str, list, FS); }
+		template <typename list_t>
+		int split(const std::string &str, list_t &list) { return split(str, list, FS); }
 	public:
 		awk_like(std::istream &_in = std::cin,  std::ostream &_out = std::cout)
 			: NR(0), NF(0), 
