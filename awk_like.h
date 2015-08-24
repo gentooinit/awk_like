@@ -37,6 +37,11 @@ class awk_like {
 							pm._field[key] = str;
 							return *this;
 						}
+
+						Proxy &operator=(afield::mapped_type::value_type c) {
+							pm._field[key] = c;
+							return *this;
+						}
 					private:
 						map &pm;
 						int key;
