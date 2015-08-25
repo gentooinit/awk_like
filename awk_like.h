@@ -85,7 +85,7 @@ class map {
 					
 					pm._field[0] = "";
 
-					for (i = 1; i < pm._field.size() - 2; ++i) {
+					for (i = 1; i <= pm._field.size() - 2; ++i) {
 						pm._field[0] += pm._field[i];
 						pm._field[0] += OFS;
 					}
@@ -250,9 +250,7 @@ class awk_like {
 			list.clear();
 			counter = 0;
 			
-			if (sep == "") {
-				counter = 0;
-			} else {
+			if (sep != "") {
 				while (std::regex_search(str, m, e)) {		
 					if (m.prefix().str() != "")
 						list[counter++] = m.prefix().str();
