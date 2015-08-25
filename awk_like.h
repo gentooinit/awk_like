@@ -6,8 +6,114 @@
 #include <regex>
 
 namespace awk {
-	
+
 typedef std::map<int, std::string> afield;
+
+class map {
+	public:
+		map(int &n, std::string &fs, bool &flag):
+			NF(n), OFS(fs), smart_build(flag) {}
+			
+		//Proxy class of std::string(afield::mapped_type)
+		class Proxy {
+			public:
+				Proxy(map &m, int k, int &n, std::string &fs, bool &flag)
+					: pm(m), key(k), NF(n), OFS(fs), smart_build(flag)  {}
+
+				operator afield::mapped_type() const {
+					return pm._field[key];
+				}
+
+				//Proxy of string& operator=(const string& str);
+				Proxy &operator=(const Proxy &rhs) {
+					pm._field[key] = rhs.pm._field[rhs.key];
+					
+					if (smart_build)
+						recompute();
+					
+					return *this;
+				}
+
+				Proxy &operator=(afield::mapped_type str) {
+					pm._field[key] = str;
+					
+					if (smart_build)
+						recompute();
+					
+					return *this;
+				}
+
+				//Proxy of string& operator=(char c);
+				Proxy &operator=(afield::mapped_type::value_type c) {
+					pm._field[key] = c;
+					
+					if (smart_build)
+						recompute();
+
+					return *this;
+				}
+				
+				Proxy &operator+=(const Proxy &rhs) {
+					pm._field[key] += rhs.pm._field[rhs.key];
+					
+					if (smart_build)
+						recompute();
+					
+					return *this;
+				}
+				
+				Proxy &operator+=(afield::mapped_type str) {
+					pm._field[key] += str;
+					
+					if (smart_build)
+						recompute();
+				
+					return *this;
+				}
+				
+				friend std::ostream& operator<<(std::ostream &, const Proxy &);
+			private:
+				map &pm;
+				int key;
+				
+				int &NF;
+				std::string &OFS;
+				bool &smart_build;
+				
+				void recompute() {
+					size_t i;
+					
+					pm._field[0] = "";
+
+					for (i = 1; i < pm._field.size() - 2; ++i) {
+						pm._field[0] += pm._field[i];
+						pm._field[0] += OFS;
+					}
+					pm._field[0] += pm._field[i];
+					
+					NF = pm._field.size() - 1;
+				}
+		};
+
+		Proxy operator[](int key) {
+			return Proxy(*this, key, NF, OFS, smart_build);
+		}
+
+		const Proxy operator[](int key) const {
+			return Proxy(const_cast<map &>(*this), key, NF, OFS, smart_build);
+		}
+
+		void clear() { _field.clear(); }
+		size_t size() { return _field.size() - 1; }
+		
+		friend class Proxy;
+	private:
+		afield _field;
+		
+		int &NF;
+		std::string &OFS;
+		bool &smart_build;
+};
 
 class awk_like {
 	protected:
@@ -17,65 +123,11 @@ class awk_like {
 		std::string FS;                                   //Field Separator
 		std::string ORS;                                  //Output Row Separator
 		std::string OFS;                                  //Output Field Separator
-			
-		class map {
-			public:
-				class Proxy {
-					public:
-						Proxy(map &m, int k): pm(m), key(k) {}
-
-						operator afield::mapped_type() const {
-							return pm._field[key];
-						}
-
-						Proxy &operator=(const Proxy &rhs) {
-							pm._field[key] = rhs.pm._field[rhs.key];
-							return *this;
-						}
-
-						Proxy &operator=(afield::mapped_type str) {
-							pm._field[key] = str;
-							return *this;
-						}
-
-						Proxy &operator=(afield::mapped_type::value_type c) {
-							pm._field[key] = c;
-							return *this;
-						}
-					private:
-						map &pm;
-						int key;
-				};
-
-				Proxy operator[](int key) {
-					return Proxy(*this, key);
-				}
-
-				const Proxy operator[](int key) const {
-					return Proxy(const_cast<map &>(*this), key);
-				}
-
-				void clear() { _field.clear(); }
-
-				friend class Proxy;
-			private:
-				afield _field;
-		} field;
 		
-		std::string all() {
-			int i;
-			std::string line = "";
-			for (i = 0; i < NF - 1; ++i) {
-				line += field[i];
-				line += OFS;
-			}
-			line += field[i];
-			
-			return line;
-		}
+		map field;
 		
 		virtual void each() {
-			out<<all()<<ORS;
+			out<<field[0]<<ORS;
 		}
 		
 		void exit() {
@@ -100,10 +152,13 @@ class awk_like {
 			size_t counter;
 			std::smatch m;
 			std::regex e(sep);
-				
-			list.clear();
-			counter = 0;
 			
+			list.clear();
+		
+			//Original str
+			list[0] = str;
+			
+			counter = 1;
 			if (sep == "") {
 				//NULL separator, separate each character into the list
 				for (; counter < str.size(); ++counter)
@@ -116,7 +171,8 @@ class awk_like {
 				list[counter++] = str;                                //get the last part
 			}
 			
-			return counter;
+			//Size exclude original str
+			return counter - 1;
 		}
 		
 		template <typename list_t>
@@ -125,7 +181,8 @@ class awk_like {
 		awk_like(std::istream &_in = std::cin,  std::ostream &_out = std::cout)
 			: NR(0), NF(0), 
 			RS("\n"), FS("[[:space:]]+"),
-			ORS("\n"), OFS(" "),
+			ORS("\n"), OFS(" "), 
+			field(NF, OFS, smart_build),
 			in(_in), out(_out)
 		{
 		}
@@ -156,7 +213,10 @@ class awk_like {
 					for (size_t i = 0; i < row.size(); ++i) {
 						++NR;
 						
+						//Disable smart build, don't insert any character into field[0] during split
+						smart_build = false;
 						NF = split(row[i], field);
+						smart_build = true;
 						
 						each();
 					}
@@ -166,17 +226,21 @@ class awk_like {
 			if (last != "" && !exit_flag) {
 				++NR;
 
+				//Disable smart build, don't insert any character into field[0] during split
+				smart_build = false;
 				NF = split(last, field);
+				smart_build = true;
 						
 				each();
 			}
 		}
-	
+		
 	private:
 		std::istream &in;
 		std::ostream &out;
 		
 		bool exit_flag;
+		bool smart_build;
 		
 		size_t row_match(std::string str, afield &list, const std::string &sep) {
 			size_t counter;
@@ -203,6 +267,12 @@ class awk_like {
 			return counter;
 		}
 };
+
+inline std::ostream& operator<<(std::ostream &os, 
+                        const map::Proxy &str)
+{
+	return (os<<static_cast<afield::mapped_type>(str));
+}
 
 };
 
