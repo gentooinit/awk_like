@@ -28,20 +28,20 @@ void awk_like::loop() {
 		if (!in.eof())
 			buffer.push_back('\n');
 		
-		afield row;
+		afield record;
 		
-		if (!row_match(buffer, row, RS)) {
+		if (!record_match(buffer, record, RS)) {
 			//No RS found
 			last = buffer;
 		} else {
 			last = "";
 
-			for (size_t i = 0; i < row.size(); ++i) {
+			for (size_t i = 0; i < record.size(); ++i) {
 				++NR;
 				
 				//Disable smart build, don't insert any character into field[0] during split
 				smart_build = false;
-				NF = split(row[i], field);
+				NF = split(record[i], field);
 				smart_build = true;
 				
 				each();

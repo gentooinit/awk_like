@@ -16,11 +16,11 @@ class awk_like {
 		virtual void begin();
 		virtual void end();	
 	protected:
-		int NR;                                           //Number of Row
+		int NR;                                           //Number of Record
 		int NF;                                           //Number of Field
-		std::string RS;                                   //Row Separator
+		std::string RS;                                   //Record Separator
 		std::string FS;                                   //Field Separator
-		std::string ORS;                                  //Output Row Separator
+		std::string ORS;                                  //Output Record Separator
 		std::string OFS;                                  //Output Field Separator
 		map field;
 		

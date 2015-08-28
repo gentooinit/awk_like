@@ -3,7 +3,7 @@
 
 namespace awk {
 	
-size_t row_match(std::string str, afield &list, const std::string &sep) {
+size_t record_match(std::string str, afield &list, const std::string &sep) {
 	size_t counter;
 	std::smatch m;
 	std::regex e(sep);

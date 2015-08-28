@@ -4,7 +4,7 @@
 
 namespace awk {
 	
-extern size_t row_match(std::string str, afield &list, const std::string &sep);
+extern size_t record_match(std::string str, afield &list, const std::string &sep);
 extern std::string replace(const std::string &str, const std::string &rgx, const std::string &fmt);
 extern std::ostream& operator<<(std::ostream &os, const map::Proxy &str);
 
