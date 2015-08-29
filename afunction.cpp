@@ -1,4 +1,6 @@
 #include "afunction.h"
+#include <cstdarg>
+#include <cstdio>
 #include <regex>
 
 namespace awk {
@@ -35,5 +37,21 @@ std::ostream& operator<<(std::ostream &os, const map::Proxy &str)
 {
 	return (os<<static_cast<afield::mapped_type>(str));
 }	
+
+std::string saprintf(const char *fmt, ...)
+{
+	va_list args;
+
+	va_start(args, fmt);
+	int len = std::vsnprintf(nullptr, 0, fmt, args) + 1;
+	va_end(args);
+	char buf[len];
+
+	va_start(args, fmt);
+	std::vsnprintf(buf, len, fmt, args);
+	va_end(args);
+
+	return std::string(buf, len - 1);
+}
 
 };
