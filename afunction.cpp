@@ -1,6 +1,7 @@
 #include "afunction.h"
 #include <cstdarg>
 #include <cstdio>
+#include <memory>
 #include <regex>
 
 namespace awk {
@@ -43,15 +44,15 @@ std::string saprintf(const char *fmt, ...)
 	va_list args;
 
 	va_start(args, fmt);
-	int len = std::vsnprintf(nullptr, 0, fmt, args) + 1;
+	int len = vsnprintf(nullptr, 0, fmt, args) + 1;
 	va_end(args);
-	char buf[len];
+	std::unique_ptr<char[]> buf(new char(len));
 
 	va_start(args, fmt);
-	std::vsnprintf(buf, len, fmt, args);
+	vsnprintf(buf.get(), len, fmt, args);
 	va_end(args);
 
-	return std::string(buf, len - 1);
+	return std::string(buf.get(), len - 1);
 }
 
 };
