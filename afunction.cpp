@@ -39,20 +39,50 @@ std::ostream& operator<<(std::ostream &os, const map::Proxy &str)
 	return (os<<static_cast<afield::mapped_type>(str));
 }	
 
-std::string saprintf(const char *fmt, ...)
+std::string saprintf(const std::string &fmt, ...)
 {
 	va_list args;
 
 	va_start(args, fmt);
-	int len = vsnprintf(nullptr, 0, fmt, args) + 1;
+	int len = vsnprintf(nullptr, 0, fmt.c_str(), args) + 1;
 	va_end(args);
-	std::unique_ptr<char[]> buf(new char(len));
+	std::unique_ptr<char[]> buf(new char[len]);
 
 	va_start(args, fmt);
-	vsnprintf(buf.get(), len, fmt, args);
+	vsnprintf(buf.get(), len, fmt.c_str(), args);
 	va_end(args);
 
 	return std::string(buf.get(), len - 1);
 }
+
+std::string saprintf(const std::string &fmt, const std::string &str)
+{
+	int len = snprintf(nullptr, 0, fmt.c_str(), str.c_str()) + 1;
+	std::unique_ptr<char[]> buf(new char[len]);
+
+	snprintf(buf.get(), len, fmt.c_str(), str.c_str());
+
+	return std::string(buf.get(), len - 1);
+}
+
+std::string saprintf(const char *fmt)
+{
+	std::string str;
+
+	while (*fmt) {
+		if (*fmt == '%') {
+			if (*(fmt + 1) == '%')
+				++fmt;
+			else
+				throw std::runtime_error("invalid format string: missing arguments");
+		}
+
+		str.push_back(*fmt++);
+	}
+	
+	return str;
+}
+
+
 
 };

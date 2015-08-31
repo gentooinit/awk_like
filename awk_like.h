@@ -2,6 +2,7 @@
 #define __AWK_LIKE_H
 #include <iostream>
 #include <string>
+#include <regex>
 #include "amap.h"
 
 namespace awk {
@@ -25,10 +26,39 @@ class awk_like {
 		map field;
 		
 		template <typename list_t>
-		size_t split(std::string str, list_t &list, const std::string &sep);
+		size_t split(std::string str, list_t &list, const std::string &sep)
+		{
+			size_t counter;
+			std::smatch m;
+			std::regex e(sep);
+			
+			list.clear();
+
+			//Original str
+			list[0] = str;
+			
+			counter = 1;
+			if (sep == "") {
+				//NULL separator, separate each character into the list
+				for (; counter < str.size(); ++counter)
+					list[counter] = str[counter];
+			} else {
+				while (std::regex_search(str, m, e)) {
+					list[counter++] = m.prefix().str();
+					str = m.suffix().str();                       //get the rest of str
+				}
+				list[counter++] = str;                                //get the last part
+			}
+			
+			//Size exclude original str
+			return counter - 1;
+		}
 
 		template <typename list_t>
-		size_t split(const std::string &str, list_t &list);		
+		size_t split(const std::string &str, list_t &list)
+		{
+			return split(str, list, FS);
+		}
 		
 		void exit();
 		int strtonum(const std::string &str);
