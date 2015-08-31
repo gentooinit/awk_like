@@ -19,6 +19,7 @@ class map {
 				Proxy(map &m, int k);
 
 				operator afield::mapped_type() const;
+				const char *c_str() const;
 
 				//Proxy of string& operator=(const string& str);
 				Proxy &operator=(const Proxy &rhs);

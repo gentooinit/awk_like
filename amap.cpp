@@ -33,6 +33,11 @@ map::Proxy::operator afield::mapped_type() const
 	return pm._field[key];
 }
 
+const char* map::Proxy::c_str() const
+{
+	return pm._field[key].c_str();
+}
+
 //Proxy of string& operator=(const string& str);
 map::Proxy&
 map::Proxy::operator=(const Proxy &rhs)
