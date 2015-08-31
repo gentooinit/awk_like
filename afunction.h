@@ -13,13 +13,13 @@ extern std::string saprintf(const std::string &fmt, const std::string &str);
 extern std::string saprintf(const char *fmt);
 
 template<typename T, typename... Args>
-std::string saprintf(const char *fmt, T val, Args... args)
+inline std::string saprintf(const char *fmt, T val, Args... args)
 {
 	std::string str;
 
 	//NOTE: '*' trick for width and precision is not supported.
 	std::regex speci_rex("%[-+#0 ]{0,1}[0-9]*(\\.[0-9])*((hh)|(ll)|[hljztL])*[diuoxXfFeEgGaAcspn]");
-	std::smatch m;
+	std::cmatch m;
 
 	while (*fmt) {
 		if (*fmt == '%') {
@@ -27,10 +27,10 @@ std::string saprintf(const char *fmt, T val, Args... args)
 				++fmt;
 			} else {
 				//Regex match to the specifier
-				if (!std::regex_search(std::string(fmt), m, speci_rex))
+				if (!std::regex_search(fmt, m, speci_rex))
 					throw std::runtime_error("invalid format string: missing arguments");
 
-				str += saprintf(m.str(), val);
+				str += saprintf(m[0], val);
 				fmt += m.length();
 				str += saprintf(fmt, args...);
 
