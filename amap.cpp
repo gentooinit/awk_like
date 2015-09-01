@@ -117,16 +117,18 @@ bool map::Proxy::operator!=(afield::mapped_type str) const
 
 void map::Proxy::recompute()
 {
-	size_t i;
+	int i;
+	auto tail = pm._field.crbegin();
 	
+	// The last element of ordered map is always the largest one.
+	// Maybe fill the *holes* inside the map with string("")
 	pm._field[0] = "";
-
-	for (i = 1; i <= pm._field.size() - 2; ++i) {
+	for (i = 1; i < tail->first; ++i) {
 		pm._field[0] += pm._field[i];
 		pm._field[0] += pm.parent.OFS;
 	}
 	pm._field[0] += pm._field[i];
-	
+
 	pm.parent.NF = pm._field.size() - 1;
 }
 
