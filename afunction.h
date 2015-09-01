@@ -38,8 +38,7 @@ inline std::string saprintf(const char *fmt, T val, Args... args)
 			}
 		}
 
-		if (*fmt != '\0')
-			str.push_back(*fmt++);
+		str.push_back(*fmt++);
 	}
 
 	return str;
