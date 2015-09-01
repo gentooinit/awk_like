@@ -39,6 +39,20 @@ std::ostream& operator<<(std::ostream &os, const map::Proxy &str)
 	return (os<<static_cast<afield::mapped_type>(str));
 }	
 
+bool operator^(const std::string &str, const char *re)
+{
+	std::smatch m;
+
+	return std::regex_search(str, m, std::regex(re));
+}
+
+bool operator^(const char *re, const std::string &str)
+{
+	std::smatch m;
+
+	return std::regex_search(str, m, std::regex(re));
+}
+
 std::string saprintf(const std::string &fmt, ...)
 {
 	va_list args;
