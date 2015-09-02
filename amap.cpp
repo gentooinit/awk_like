@@ -44,8 +44,11 @@ map::Proxy::operator=(const Proxy &rhs)
 {
 	pm._field[key] = rhs.pm._field[rhs.key];
 	
-	if (pm.parent.smart_build)
+	if (key == 0) {
+		resplit();
+	} else if (pm.parent.smart_build) {
 		recompute();
+	}
 	
 	return *this;
 }
@@ -55,8 +58,11 @@ map::Proxy::operator=(afield::mapped_type str)
 {
 	pm._field[key] = str;
 	
-	if (pm.parent.smart_build)
+	if (key == 0) {
+		resplit();
+	} else if (pm.parent.smart_build) {
 		recompute();
+	}
 	
 	return *this;
 }
@@ -67,8 +73,11 @@ map::Proxy::operator=(afield::mapped_type::value_type c)
 {
 	pm._field[key] = c;
 	
-	if (pm.parent.smart_build)
+	if (key == 0) {
+		resplit();
+	} else if (pm.parent.smart_build) {
 		recompute();
+	}
 
 	return *this;
 }
@@ -130,6 +139,11 @@ void map::Proxy::recompute()
 	pm._field[0] += pm._field[i];
 
 	pm.parent.NF = pm._field.size() - 1;
+}
+
+void map::Proxy::resplit()
+{
+	pm.parent.NF = pm.parent.split(pm._field[0], pm._field);
 }
 
 };

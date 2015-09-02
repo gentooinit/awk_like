@@ -40,6 +40,7 @@ class map {
 				int key;
 				
 				void recompute();
+				void resplit();
 		};
 
 		Proxy operator[](int key);
