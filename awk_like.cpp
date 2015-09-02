@@ -7,7 +7,7 @@ namespace awk {
 awk_like::awk_like(std::istream &_in,  std::ostream &_out)
 	: NR(0), NF(0), 
 	RS("\n"), FS("[[:space:]]+"),
-	ORS("\n"), OFS(" "), 
+	ORS("\n"), OFS(" "),  OFMT("%.6g"),
 	field(*this),
 	in(_in), out(_out)
 {
@@ -15,6 +15,17 @@ awk_like::awk_like(std::istream &_in,  std::ostream &_out)
 
 void awk_like::begin() {}
 void awk_like::end() {}
+
+void awk_like::print() const
+{
+	out<<field[0]<<ORS;
+}
+
+void awk_like::print(const char *val) const
+{
+	out<<val<<ORS;
+}
+
 
 void awk_like::loop() {
 	exit_flag = false;

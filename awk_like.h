@@ -4,6 +4,7 @@
 #include <string>
 #include <regex>
 #include "amap.h"
+#include "afunction.h"
 
 namespace awk {
 
@@ -23,6 +24,7 @@ class awk_like {
 		std::string FS;                                   //Field Separator
 		std::string ORS;                                  //Output Record Separator
 		std::string OFS;                                  //Output Field Separator
+		std::string OFMT;                                 //Output Format
 		map field;
 		
 		template <typename list_t>
@@ -58,6 +60,40 @@ class awk_like {
 		size_t split(const std::string &str, list_t &list)
 		{
 			return split(str, list, FS);
+		}
+
+		void print() const;
+		void print(const char *val) const;
+
+		template <typename T>
+		void print(const T &val) const
+		{
+			if (typeid(T) == typeid(float) || typeid(T) == typeid(double))
+				out<<saprintf(OFMT, val);
+			else
+				out<<val;
+
+			out<<ORS;
+		}
+
+		template <typename... Args>
+		void print(const char *val, const Args... args) const
+		{
+			out<<val;
+			out<<OFS;
+			print(args...);
+		}
+
+		template <typename T, typename... Args>
+		void print(const T &val, const Args... args) const
+		{
+			if (typeid(T) == typeid(float) || typeid(T) == typeid(double))
+				out<<saprintf(OFMT, val);
+			else
+				out<<val;
+
+			out<<OFS;
+			print(args...);
 		}
 		
 		void exit();
