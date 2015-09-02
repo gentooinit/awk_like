@@ -30,19 +30,19 @@ map::Proxy::Proxy(map &m, int k): pm(m), key(k) {}
 
 map::Proxy::operator afield::mapped_type() const
 {
-	return pm._field[key];
+	return map_get_ro(pm._field, key);
 }
 
 const char* map::Proxy::c_str() const
 {
-	return pm._field[key].c_str();
+	return map_get_ro(pm._field, key).c_str();
 }
 
 //Proxy of string& operator=(const string& str);
 map::Proxy&
 map::Proxy::operator=(const Proxy &rhs)
 {
-	pm._field[key] = rhs.pm._field[rhs.key];
+	pm._field[key] = map_get_ro(rhs.pm._field, rhs.key);
 	
 	if (key == 0) {
 		resplit();
@@ -85,7 +85,7 @@ map::Proxy::operator=(afield::mapped_type::value_type c)
 map::Proxy&
 map::Proxy::operator+=(const Proxy &rhs)
 {
-	pm._field[key] += rhs.pm._field[rhs.key];
+	pm._field[key] += map_get_ro(rhs.pm._field, rhs.key);
 	
 	if (pm.parent.smart_build)
 		recompute();
@@ -106,22 +106,22 @@ map::Proxy::operator+=(afield::mapped_type str)
 
 bool map::Proxy::operator==(const Proxy &rhs) const
 {
-	return pm._field[key] == rhs.pm._field[rhs.key];
+	return map_get_ro(pm._field, key) == map_get_ro(rhs.pm._field, rhs.key);
 }
 
 bool map::Proxy::operator==(afield::mapped_type str) const
 {
-	return pm._field[key] == str;
+	return map_get_ro(pm._field, key) == str;
 }
 
 bool map::Proxy::operator!=(const Proxy &rhs) const
 {
-	return pm._field[key] != rhs.pm._field[rhs.key];
+	return map_get_ro(pm._field, key) != map_get_ro(rhs.pm._field, rhs.key);
 }
 
 bool map::Proxy::operator!=(afield::mapped_type str) const
 {
-	return pm._field[key] != str;
+	return map_get_ro(pm._field, key) != str;
 }
 
 void map::Proxy::recompute()

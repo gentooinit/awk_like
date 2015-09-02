@@ -5,6 +5,7 @@
 
 namespace awk {
 	
+extern afield::mapped_type map_get_ro(const afield &buf, const afield::key_type &key);
 extern size_t record_match(std::string str, afield &list, const std::string &sep);
 extern std::string replace(const std::string &str, const std::string &rgx, const std::string &fmt);
 extern std::ostream& operator<<(std::ostream &os, const map::Proxy &str);

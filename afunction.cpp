@@ -5,6 +5,16 @@
 #include <regex>
 
 namespace awk {
+
+afield::mapped_type map_get_ro(const afield &buf, const afield::key_type &key)
+{
+	auto it = buf.find(key);
+
+	if (it != buf.end())
+		return buf.at(key);
+	else
+		return "";
+}
 	
 size_t record_match(std::string str, afield &list, const std::string &sep) {
 	size_t counter;
