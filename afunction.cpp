@@ -63,6 +63,96 @@ bool operator^(const char *re, const std::string &str)
 	return std::regex_search(str, m, std::regex(re));
 }
 
+bool operator<(const map::Proxy &lhs, const map::Proxy &rhs)
+{
+	return map_get_ro(lhs.pm._field, lhs.key) < map_get_ro(rhs.pm._field, rhs.key);
+}
+
+bool operator<(const map::Proxy &lhs, const afield::mapped_type &rhs)
+{
+	return map_get_ro(lhs.pm._field, lhs.key) < rhs;
+}
+
+bool operator<(const afield::mapped_type &lhs, const map::Proxy &rhs)
+{
+	return lhs < map_get_ro(rhs.pm._field, rhs.key);
+}
+
+bool operator<=(const map::Proxy &lhs, const map::Proxy &rhs)
+{
+	return (lhs < rhs) || (lhs == rhs);
+}
+
+bool operator<=(const map::Proxy &lhs, const afield::mapped_type &rhs)
+{
+	return (lhs < rhs) || (lhs == rhs);
+}
+
+bool operator<=(const afield::mapped_type &lhs, const map::Proxy &rhs)
+{
+	return (lhs < rhs) || (lhs == rhs);
+}
+
+bool operator>(const map::Proxy &lhs, const map::Proxy &rhs)
+{
+	return !(lhs <= rhs);
+}
+
+bool operator>(const map::Proxy &lhs, const afield::mapped_type &rhs)
+{
+	return !(lhs <= rhs);
+}
+
+bool operator>(const afield::mapped_type &lhs, const map::Proxy &rhs)
+{
+	return !(lhs <= rhs);
+}
+
+bool operator>=(const map::Proxy &lhs, const map::Proxy &rhs)
+{
+	return !(lhs < rhs);
+}
+
+bool operator>=(const map::Proxy &lhs, const afield::mapped_type &rhs)
+{
+	return !(lhs < rhs);
+}
+
+bool operator>=(const afield::mapped_type &lhs, const map::Proxy &rhs)
+{
+	return !(lhs < rhs);
+}
+
+bool operator==(const map::Proxy &lhs, const map::Proxy &rhs)
+{
+	return !(lhs < rhs) && !(rhs < lhs);
+}
+
+bool operator==(const map::Proxy &lhs, const afield::mapped_type &rhs)
+{
+	return !(lhs < rhs) && !(rhs < lhs);
+}
+
+bool operator==(const afield::mapped_type &lhs, const map::Proxy &rhs)
+{
+	return !(lhs < rhs) && !(rhs < lhs);
+}
+
+bool operator!=(const map::Proxy &lhs, const map::Proxy &rhs)
+{
+	return !(lhs < rhs) || !(rhs < lhs);
+}
+
+bool operator!=(const map::Proxy &lhs, const afield::mapped_type &rhs)
+{
+	return !(lhs < rhs) || !(rhs < lhs);
+}
+
+bool operator!=(const afield::mapped_type &lhs, const map::Proxy &rhs)
+{
+	return !(lhs < rhs) || !(rhs < lhs);
+}
+
 std::string saprintf(const std::string &fmt, ...)
 {
 	va_list args;

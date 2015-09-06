@@ -8,13 +8,11 @@ typedef std::map<int, std::string> afield;
 
 class awk_like;
 class map {
-	friend class Proxy;
 	public:
 		map(awk_like &a);
 			
 		//Proxy class of std::string(afield::mapped_type)
 		class Proxy {
-			friend std::ostream& operator<<(std::ostream &, const Proxy &);
 			public:
 				Proxy(map &m, int k);
 
@@ -31,16 +29,16 @@ class map {
 				
 				Proxy &operator+=(const Proxy &rhs);
 				Proxy &operator+=(afield::mapped_type str);
-				bool operator==(const Proxy &rhs) const;
-				bool operator==(afield::mapped_type str) const;
-				bool operator!=(const Proxy &rhs) const;
-				bool operator!=(afield::mapped_type str) const;
 			private:
 				map &pm;
 				int key;
 				
 				void recompute();
 				void resplit();
+				friend std::ostream& operator<<(std::ostream &, const Proxy &);
+				friend bool operator<(const Proxy &lhs, const Proxy &rhs);
+				friend bool operator<(const Proxy &lhs, const afield::mapped_type &rhs);
+				friend bool operator<(const afield::mapped_type &lhs, const Proxy &rhs);
 		};
 
 		Proxy operator[](int key);
@@ -51,6 +49,11 @@ class map {
 	private:
 		afield _field;
 		awk_like &parent;
+
+		friend class Proxy;
+		friend bool operator<(const Proxy &lhs, const Proxy &rhs);
+		friend bool operator<(const Proxy &lhs, const afield::mapped_type &rhs);
+		friend bool operator<(const afield::mapped_type &lhs, const Proxy &rhs);
 };
 
 };

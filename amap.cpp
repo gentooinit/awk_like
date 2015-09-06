@@ -104,26 +104,6 @@ map::Proxy::operator+=(afield::mapped_type str)
 	return *this;
 }
 
-bool map::Proxy::operator==(const Proxy &rhs) const
-{
-	return map_get_ro(pm._field, key) == map_get_ro(rhs.pm._field, rhs.key);
-}
-
-bool map::Proxy::operator==(afield::mapped_type str) const
-{
-	return map_get_ro(pm._field, key) == str;
-}
-
-bool map::Proxy::operator!=(const Proxy &rhs) const
-{
-	return map_get_ro(pm._field, key) != map_get_ro(rhs.pm._field, rhs.key);
-}
-
-bool map::Proxy::operator!=(afield::mapped_type str) const
-{
-	return map_get_ro(pm._field, key) != str;
-}
-
 void map::Proxy::recompute()
 {
 	int i;
