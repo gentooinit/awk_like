@@ -104,6 +104,18 @@ map::Proxy::operator+=(afield::mapped_type str)
 	return *this;
 }
 
+//Proxy of char& operator[](size_t pos);
+char &map::Proxy::operator[](size_t pos)
+{
+	return map_get_ro(pm._field, key)[pos];
+}
+
+//Proxy of const char& operator[](size_t pos) const;
+const char &map::Proxy::operator[](size_t pos) const
+{
+	return map_get_ro(pm._field, key)[pos];
+}
+
 void map::Proxy::recompute()
 {
 	int i;

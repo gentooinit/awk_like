@@ -29,6 +29,12 @@ class map {
 				
 				Proxy &operator+=(const Proxy &rhs);
 				Proxy &operator+=(afield::mapped_type str);
+				
+				//Proxy of char& operator[](size_t pos);
+				char &operator[](size_t pos);
+
+				//Proxy of const char& operator[](size_t pos) const;
+				const char &operator[](size_t pos) const;
 			private:
 				map &pm;
 				int key;
