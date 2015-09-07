@@ -44,6 +44,11 @@ std::string replace(const std::string &str, const std::string &rgx, const std::s
 	return regex_replace(str, std::regex(rgx), fmt);
 }
 
+std::string substr(const std::string &str, size_t pos, size_t len)
+{
+	return str.substr(pos, len);
+}
+
 std::ostream& operator<<(std::ostream &os, const map::Proxy &str)
 {
 	return (os<<static_cast<afield::mapped_type>(str));

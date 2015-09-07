@@ -8,6 +8,7 @@ namespace awk {
 extern afield::mapped_type map_get_ro(const afield &buf, const afield::key_type &key);
 extern size_t record_match(std::string str, afield &list, const std::string &sep);
 extern std::string replace(const std::string &str, const std::string &rgx, const std::string &fmt);
+extern std::string substr(const std::string &str, size_t pos = 0, size_t len = std::string::npos);
 extern std::ostream& operator<<(std::ostream &os, const map::Proxy &str);
 extern bool operator^(const std::string &str, const char *re);
 extern bool operator^(const char *re, const std::string &str);
