@@ -45,7 +45,7 @@ class map {
 		const Proxy operator[](int key) const;
 
 		void clear();
-		size_t size();
+		size_t size() const;
 	private:
 		afield _field;
 		awk_like &parent;

@@ -20,7 +20,7 @@ void map::clear()
 	_field.clear(); 
 }
 
-size_t map::size()
+size_t map::size() const
 {
 	return _field.size() - 1;
 }

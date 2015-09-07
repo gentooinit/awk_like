@@ -49,6 +49,21 @@ std::string substr(const std::string &str, size_t pos, size_t len)
 	return str.substr(pos, len);
 }
 
+size_t length(const std::string &str)
+{
+	return str.size();
+}
+
+size_t length(const afield &array)
+{
+	return array.size() - 1;
+}
+
+size_t length(const map &array)
+{
+	return array.size();
+}
+
 std::ostream& operator<<(std::ostream &os, const map::Proxy &str)
 {
 	return (os<<static_cast<afield::mapped_type>(str));
