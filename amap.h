@@ -45,6 +45,9 @@ class map {
 				friend bool operator<(const Proxy &lhs, const Proxy &rhs);
 				friend bool operator<(const Proxy &lhs, const afield::mapped_type &rhs);
 				friend bool operator<(const afield::mapped_type &lhs, const Proxy &rhs);
+				friend afield::mapped_type operator+(const Proxy &lhs, const Proxy &rhs);
+				friend afield::mapped_type operator+(const Proxy &lhs, const afield::mapped_type &rhs);
+				friend afield::mapped_type operator+(const afield::mapped_type &lhs, const Proxy &rhs);
 		};
 
 		Proxy operator[](int key);
@@ -60,6 +63,10 @@ class map {
 		friend bool operator<(const Proxy &lhs, const Proxy &rhs);
 		friend bool operator<(const Proxy &lhs, const afield::mapped_type &rhs);
 		friend bool operator<(const afield::mapped_type &lhs, const Proxy &rhs);
+		friend afield::mapped_type operator+(const Proxy &lhs, const Proxy &rhs);
+		friend afield::mapped_type operator+(const Proxy &lhs, const afield::mapped_type &rhs);
+		friend afield::mapped_type operator+(const afield::mapped_type &lhs, const Proxy &rhs);
+
 };
 
 };

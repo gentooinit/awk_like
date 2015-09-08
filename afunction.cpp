@@ -102,6 +102,21 @@ bool operator^(const char *re, const std::string &str)
 	return str ^ re;
 }
 
+afield::mapped_type operator+(const map::Proxy &lhs, const map::Proxy &rhs)
+{
+	return map_get_ro(lhs.pm._field, lhs.key) + map_get_ro(rhs.pm._field, rhs.key);
+}
+
+afield::mapped_type operator+(const map::Proxy &lhs, const afield::mapped_type &rhs)
+{
+	return map_get_ro(lhs.pm._field, lhs.key) + rhs;
+}
+
+afield::mapped_type operator+(const afield::mapped_type &lhs, const map::Proxy &rhs)
+{
+	return lhs + map_get_ro(rhs.pm._field, rhs.key);
+}
+
 bool operator<(const map::Proxy &lhs, const map::Proxy &rhs)
 {
 	return map_get_ro(lhs.pm._field, lhs.key) < map_get_ro(rhs.pm._field, rhs.key);
