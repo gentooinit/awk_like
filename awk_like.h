@@ -9,10 +9,11 @@
 namespace awk {
 
 class awk_like {
-	friend class map;
 	public:
 		awk_like(std::istream &_in = std::cin,  
 		         std::ostream &_out = std::cout);
+
+		virtual ~awk_like();
 			 	
 		void loop();	
 		virtual void begin();
@@ -26,14 +27,20 @@ class awk_like {
 		std::string OFS;                                  //Output Field Separator
 		std::string OFMT;                                 //Output Format
 		map field;
+		static int IGNORECASE;                            //Controls the case-sensitivity of all regex
 		
 		template <typename list_t>
 		size_t split(std::string str, list_t &list, const std::string &sep)
 		{
-			size_t counter;
+			auto flag = std::regex::ECMAScript;
+
+			if (IGNORECASE)
+				flag |= std::regex::icase;
+
+			std::regex e(sep.c_str(), flag);
 			std::smatch m;
-			std::regex e(sep);
-			
+			size_t counter;
+
 			list.clear();
 
 			//Original str
@@ -106,6 +113,11 @@ class awk_like {
 		
 		bool exit_flag;
 		bool smart_build;
+
+		friend class map;
+		friend std::string replace(const std::string &str, const std::string &rgx, const std::string &fmt);
+		friend size_t record_match(std::string str, afield &list, const std::string &sep);
+		friend bool operator^(const std::string &str, const char *re);
 };
 
 

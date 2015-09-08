@@ -4,6 +4,8 @@
 
 namespace awk {
 	
+int awk_like::IGNORECASE;
+
 awk_like::awk_like(std::istream &_in,  std::ostream &_out)
 	: NR(0), NF(0), 
 	RS("\n"), FS("[[:space:]]+"),
@@ -11,6 +13,12 @@ awk_like::awk_like(std::istream &_in,  std::ostream &_out)
 	field(*this),
 	in(_in), out(_out)
 {
+	IGNORECASE = 0;
+}
+
+awk_like::~awk_like()
+{
+	IGNORECASE = 0;
 }
 
 void awk_like::begin() {}

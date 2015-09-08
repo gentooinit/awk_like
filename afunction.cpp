@@ -1,4 +1,5 @@
 #include "afunction.h"
+#include "awk_like.h"    //XXX: circle include
 #include <cstdarg>
 #include <cstdio>
 #include <memory>
@@ -16,10 +17,17 @@ afield::mapped_type map_get_ro(const afield &buf, const afield::key_type &key)
 		return "";
 }
 	
-size_t record_match(std::string str, afield &list, const std::string &sep) {
-	size_t counter;
+size_t record_match(std::string str, afield &list, const std::string &sep)
+{
+	auto flag = std::regex::ECMAScript;
+
+	if (awk_like::IGNORECASE)
+		flag |= std::regex::icase;
+
+	std::regex e(sep.c_str(), flag);
 	std::smatch m;
-	std::regex e(sep);
+
+	size_t counter;
 
 	list.clear();
 	counter = 0;
@@ -41,7 +49,14 @@ size_t record_match(std::string str, afield &list, const std::string &sep) {
 
 std::string replace(const std::string &str, const std::string &rgx, const std::string &fmt)
 {
-	return regex_replace(str, std::regex(rgx), fmt);
+	auto flag = std::regex::ECMAScript;
+
+	if (awk_like::IGNORECASE)
+		flag |= std::regex::icase;
+
+	std::regex e(rgx.c_str(), flag);
+
+	return regex_replace(str, e, fmt);
 }
 
 std::string substr(const std::string &str, size_t pos, size_t len)
@@ -71,16 +86,20 @@ std::ostream& operator<<(std::ostream &os, const map::Proxy &str)
 
 bool operator^(const std::string &str, const char *re)
 {
+	auto flag = std::regex::ECMAScript;
+
+	if (awk_like::IGNORECASE)
+		flag |= std::regex::icase;
+
+	std::regex e(re, flag);
 	std::smatch m;
 
-	return std::regex_search(str, m, std::regex(re));
+	return std::regex_search(str, m, e);
 }
 
 bool operator^(const char *re, const std::string &str)
 {
-	std::smatch m;
-
-	return std::regex_search(str, m, std::regex(re));
+	return str ^ re;
 }
 
 bool operator<(const map::Proxy &lhs, const map::Proxy &rhs)
