@@ -30,7 +30,7 @@ class awk_like {
 		static int IGNORECASE;                            //Controls the case-sensitivity of all regex
 		
 		template <typename list_t>
-		size_t split(std::string str, list_t &list, const std::string &sep)
+		size_t split(std::string str, list_t &list, const std::string &sep) const
 		{
 			auto flag = std::regex::ECMAScript;
 
@@ -64,7 +64,7 @@ class awk_like {
 		}
 
 		template <typename list_t>
-		size_t split(const std::string &str, list_t &list)
+		size_t split(const std::string &str, list_t &list) const
 		{
 			return split(str, list, FS);
 		}
