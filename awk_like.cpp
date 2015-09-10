@@ -97,7 +97,7 @@ int awk_like::strtonum(const std::string &str)
 		return 0;
 	}
 
-	return strtol(str.c_str(), 0, 0);
+	return std::stoul(str, nullptr, 0);
 }
 
 
