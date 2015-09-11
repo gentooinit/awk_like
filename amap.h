@@ -17,6 +17,7 @@ class map {
 				Proxy(map &m, int k);
 
 				operator afield::mapped_type() const;
+				afield::mapped_type get_content() const;
 				const char *c_str() const;
 
 				//Proxy of string& operator=(const string& str);
@@ -41,13 +42,6 @@ class map {
 				
 				void recompute();
 				void resplit();
-				friend std::ostream& operator<<(std::ostream &, const Proxy &);
-				friend bool operator<(const Proxy &lhs, const Proxy &rhs);
-				friend bool operator<(const Proxy &lhs, const afield::mapped_type &rhs);
-				friend bool operator<(const afield::mapped_type &lhs, const Proxy &rhs);
-				friend afield::mapped_type operator+(const Proxy &lhs, const Proxy &rhs);
-				friend afield::mapped_type operator+(const Proxy &lhs, const afield::mapped_type &rhs);
-				friend afield::mapped_type operator+(const afield::mapped_type &lhs, const Proxy &rhs);
 		};
 
 		Proxy operator[](int key);
@@ -60,13 +54,6 @@ class map {
 		awk_like &parent;
 
 		friend class Proxy;
-		friend bool operator<(const Proxy &lhs, const Proxy &rhs);
-		friend bool operator<(const Proxy &lhs, const afield::mapped_type &rhs);
-		friend bool operator<(const afield::mapped_type &lhs, const Proxy &rhs);
-		friend afield::mapped_type operator+(const Proxy &lhs, const Proxy &rhs);
-		friend afield::mapped_type operator+(const Proxy &lhs, const afield::mapped_type &rhs);
-		friend afield::mapped_type operator+(const afield::mapped_type &lhs, const Proxy &rhs);
-
 };
 
 };

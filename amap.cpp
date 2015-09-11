@@ -33,6 +33,11 @@ map::Proxy::operator afield::mapped_type() const
 	return map_get_ro(pm._field, key);
 }
 
+afield::mapped_type map::Proxy::get_content() const
+{
+	return static_cast<afield::mapped_type>(*this);
+}
+
 const char* map::Proxy::c_str() const
 {
 	return map_get_ro(pm._field, key).c_str();

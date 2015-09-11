@@ -81,7 +81,7 @@ size_t length(const map &array)
 
 std::ostream& operator<<(std::ostream &os, const map::Proxy &str)
 {
-	return (os<<static_cast<afield::mapped_type>(str));
+	return os<<str.get_content();
 }	
 
 bool operator^(const std::string &str, const char *re)
@@ -104,32 +104,32 @@ bool operator^(const char *re, const std::string &str)
 
 afield::mapped_type operator+(const map::Proxy &lhs, const map::Proxy &rhs)
 {
-	return map_get_ro(lhs.pm._field, lhs.key) + map_get_ro(rhs.pm._field, rhs.key);
+	return lhs.get_content() + rhs.get_content();
 }
 
 afield::mapped_type operator+(const map::Proxy &lhs, const afield::mapped_type &rhs)
 {
-	return map_get_ro(lhs.pm._field, lhs.key) + rhs;
+	return lhs.get_content() + rhs;
 }
 
 afield::mapped_type operator+(const afield::mapped_type &lhs, const map::Proxy &rhs)
 {
-	return lhs + map_get_ro(rhs.pm._field, rhs.key);
+	return lhs + rhs.get_content();
 }
 
 bool operator<(const map::Proxy &lhs, const map::Proxy &rhs)
 {
-	return map_get_ro(lhs.pm._field, lhs.key) < map_get_ro(rhs.pm._field, rhs.key);
+	return lhs.get_content() < rhs.get_content();
 }
 
 bool operator<(const map::Proxy &lhs, const afield::mapped_type &rhs)
 {
-	return map_get_ro(lhs.pm._field, lhs.key) < rhs;
+	return lhs.get_content() < rhs;
 }
 
 bool operator<(const afield::mapped_type &lhs, const map::Proxy &rhs)
 {
-	return lhs < map_get_ro(rhs.pm._field, rhs.key);
+	return lhs < rhs.get_content();
 }
 
 bool operator<=(const map::Proxy &lhs, const map::Proxy &rhs)
