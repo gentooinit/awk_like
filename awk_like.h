@@ -102,6 +102,17 @@ class awk_like {
 			out<<OFS;
 			print(args...);
 		}
+
+		void aprintf(const char *fmt) const
+		{
+			out<<saprintf(fmt);
+		};
+
+		template<typename T, typename... Args>
+		void aprintf(const char *fmt, T val, Args... args) const
+		{
+			out<<saprintf(fmt, args...);
+		};
 		
 		void exit();
 		int strtonum(const std::string &str);

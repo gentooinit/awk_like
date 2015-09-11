@@ -194,17 +194,17 @@ bool operator==(const afield::mapped_type &lhs, const map::Proxy &rhs)
 
 bool operator!=(const map::Proxy &lhs, const map::Proxy &rhs)
 {
-	return !(lhs < rhs) || !(rhs < lhs);
+	return (lhs < rhs) || (rhs < lhs);
 }
 
 bool operator!=(const map::Proxy &lhs, const afield::mapped_type &rhs)
 {
-	return !(lhs < rhs) || !(rhs < lhs);
+	return (lhs < rhs) || (rhs < lhs);
 }
 
 bool operator!=(const afield::mapped_type &lhs, const map::Proxy &rhs)
 {
-	return !(lhs < rhs) || !(rhs < lhs);
+	return (lhs < rhs) || (rhs < lhs);
 }
 
 std::string saprintf(const std::string &fmt, ...)
