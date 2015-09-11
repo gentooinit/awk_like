@@ -51,7 +51,7 @@ class awk_like {
 				//NULL separator, separate each character into the list
 				for (; counter < str.size(); ++counter)
 					list[counter] = str[counter];
-			} else {
+			} else if (str != "") {
 				while (std::regex_search(str, m, e)) {
 					list[counter++] = m.prefix().str();
 					str = m.suffix().str();                       //get the rest of str
