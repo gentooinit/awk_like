@@ -115,7 +115,7 @@ class awk_like {
 		};
 		
 		void exit();
-		int strtonum(const std::string &str);
+		unsigned long strtonum(const std::string &str);
 		
 		virtual void each();
 	private:
