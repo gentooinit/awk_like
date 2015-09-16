@@ -108,8 +108,8 @@ class awk_like {
 			out<<saprintf(fmt);
 		};
 
-		template<typename T, typename... Args>
-		void aprintf(const char *fmt, T val, Args... args) const
+		template<typename... Args>
+		void aprintf(const char *fmt, Args... args) const
 		{
 			out<<saprintf(fmt, args...);
 		};
