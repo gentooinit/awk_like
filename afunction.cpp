@@ -3,6 +3,7 @@
 #include <cstdarg>
 #include <cstdio>
 #include <memory>
+#include <utility>
 #include <regex>
 
 namespace awk {
@@ -71,7 +72,7 @@ size_t length(const std::string &str)
 
 size_t length(const afield &array)
 {
-	return array.size() - 1;
+	return std::min(array.size() - 1, array.size());
 }
 
 size_t length(const map &array)
