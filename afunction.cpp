@@ -35,8 +35,7 @@ size_t record_match(std::string str, afield &list, const std::string &sep)
 	
 	if (sep != "") {
 		while (std::regex_search(str, m, e)) {		
-			if (m.prefix().str() != "")
-				list[counter++] = m.prefix().str();
+			list[counter++] = m.prefix().str();
 				
 			str = m.suffix().str();                       //get the rest of str
 
