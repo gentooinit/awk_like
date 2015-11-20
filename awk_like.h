@@ -49,12 +49,15 @@ class awk_like {
 			counter = 1;
 			if (sep == "") {
 				//NULL separator, separate each character into the list
-				for (; counter < str.size(); ++counter)
-					list[counter] = str[counter];
+				for (; counter <= str.size(); ++counter)
+					list[counter] = str[counter - 1];
 			} else if (str != "") {
 				while (std::regex_search(str, m, e)) {
 					list[counter++] = m.prefix().str();
 					str = m.suffix().str();                       //get the rest of str
+					
+					if (str == "")
+						break;                                //get out of the loop in case of sep is an empty accepted regex
 				}
 				list[counter++] = str;                                //get the last part
 			}
