@@ -90,14 +90,14 @@ void awk_like::exit()
 	exit_flag = true;
 }
 
-unsigned long awk_like::strtonum(const std::string &str)
+unsigned long awk_like::strtonum(const std::string &str, int base)
 {
 	if (std::regex_match(str, std::regex("[^[:xdigit:]Xx+-]"))) {
 		std::cerr<<"error: line: "<<NR<<": Illegal number format."<<std::endl;
 		return 0;
 	}
 
-	return std::stoul(str, nullptr, 0);
+	return std::stoul(str, nullptr, base);
 }
 
 
