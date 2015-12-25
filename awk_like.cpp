@@ -14,6 +14,7 @@ awk_like::awk_like(std::istream &_in,  std::ostream &_out)
 	in(_in), out(_out)
 {
 	IGNORECASE = 0;
+	exit_flag = false;
 }
 
 awk_like::~awk_like()
@@ -36,8 +37,6 @@ void awk_like::print(const char *val) const
 
 
 void awk_like::loop() {
-	exit_flag = false;
-	
 	std::string buffer;
 	std::string last = "";
 	
