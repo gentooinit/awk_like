@@ -26,6 +26,7 @@ class awk_like {
 		std::string ORS;                                  //Output Record Separator
 		std::string OFS;                                  //Output Field Separator
 		std::string OFMT;                                 //Output Format
+		std::string FPAT;                                 //Field Pattern
 		map field;
 		static int IGNORECASE;                            //Controls the case-sensitivity of all regex
 		
@@ -62,7 +63,7 @@ class awk_like {
 				list[counter++] = str;                                //get the last part
 			}
 			
-			//Size exclude original str
+			//Size excluded original str
 			return counter - 1;
 		}
 
@@ -70,6 +71,47 @@ class awk_like {
 		size_t split(const std::string &str, list_t &list) const
 		{
 			return split(str, list, FS);
+		}
+
+		template <typename list_t>
+		size_t patsplit(std::string str, list_t &list, const std::string &pat) const
+		{
+			auto flag = std::regex::ECMAScript;
+
+			if (IGNORECASE)
+				flag |= std::regex::icase;
+ 
+			std::regex e(pat.c_str(), flag);
+			std::smatch m;
+			size_t counter;
+
+			list.clear();
+
+			//Original str
+			list[0] = str;
+			
+			counter = 1;
+			if (str != "") {
+				while (std::regex_search(str, m, e)) {
+					list[counter++] = m.str();
+
+					if (m.suffix().str() == "")
+						break;                                //get out of the loop if there is no more character
+
+					str = m.suffix().str();                       //get the rest of str
+					if (str.size() > 0)                           //skip the mismatch character
+						str = str.substr(1);
+				}
+			}
+			
+			//Size excluded original str
+			return counter - 1;
+		}
+
+		template <typename list_t>
+		size_t patsplit(const std::string &str, list_t &list) const
+		{
+			return patsplit(str, list, FPAT);
 		}
 
 		void print() const;

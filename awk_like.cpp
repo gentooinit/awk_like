@@ -10,6 +10,7 @@ awk_like::awk_like(std::istream &_in,  std::ostream &_out)
 	: NR(0), NF(0), 
 	RS("\n"), FS("[[:space:]]+"),
 	ORS("\n"), OFS(" "),  OFMT("%.6g"),
+	FPAT(""),
 	field(*this),
 	in(_in), out(_out)
 {
@@ -59,7 +60,12 @@ void awk_like::loop() {
 				
 				//Disable smart build, don't insert any character into field[0] during split
 				smart_build = false;
-				NF = split(record[i], field);
+
+				//TODO: FPAT and FS override each other
+				if (FPAT != "")
+					NF = patsplit(record[i], field);
+				else
+					NF = split(record[i], field);
 				smart_build = true;
 				
 				each();
@@ -72,7 +78,10 @@ void awk_like::loop() {
 
 		//Disable smart build, don't insert any character into field[0] during split
 		smart_build = false;
-		NF = split(last, field);
+		if (FPAT != "")
+			NF = patsplit(last, field);
+		else
+			NF = split(last, field);
 		smart_build = true;
 				
 		each();
